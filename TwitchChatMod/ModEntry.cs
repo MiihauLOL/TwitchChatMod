@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using GenericModConfigMenu; // Import GMCM API
+using GenericModConfigMenu;
 using System.Numerics;
 
 namespace TwitchChatMod
@@ -97,7 +97,7 @@ namespace TwitchChatMod
         }
         private void OnRenderingHud(object sender, RenderingHudEventArgs e)
         {
-            // Adjust the ChatBox dimensions on each frame render
+            
             AdjustChatBoxWidth();
         }
 
@@ -105,18 +105,13 @@ namespace TwitchChatMod
         {
             if (Game1.chatBox != null)
             {
-                // Reduce width to half its original size
                 Game1.chatBox.chatBox.Width = (int)(896 * Config.ChatWidthScale);
-            //Game1.chatBox.width = Game1.chatBox.width / 2;
 
-                // Optional: Adjust the position of the ChatBox if necessary
-                //Game1.chatBox.xPositionOnScreen = Game1.viewport.Width - Game1.chatBox.width - 10;
             }
         }
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            // Update configuration values upon loading a save file
             AdjustChatBoxWidth();
             channel = Config.TwitchChannel.ToLower();
             if (Context.IsWorldReady && !listening && !string.IsNullOrWhiteSpace(channel))
@@ -175,7 +170,6 @@ namespace TwitchChatMod
                         }
                         catch (IOException ex) when (token.IsCancellationRequested)
                         {
-                            // Expected when closing the connection
                             Monitor.Log("Twitch chat listener stopped due to cancellation.", LogLevel.Info);
                             break;
                         }
@@ -213,7 +207,7 @@ namespace TwitchChatMod
                     {
                         if (tag.StartsWith("display-name="))
                         {
-                            return tag.Substring(13); // Extract value after "display-name="
+                            return tag.Substring(13); 
                         }
                     }
                 }
@@ -229,7 +223,6 @@ namespace TwitchChatMod
         {
             try
             {
-                // Find the start of the username (after metadata and before '!')
                 var prefixStart = message.IndexOf(" :") + 2;
                 var exclamationMarkIndex = message.IndexOf("!");
                 if (exclamationMarkIndex > prefixStart)
@@ -248,7 +241,6 @@ namespace TwitchChatMod
         {
             try
             {
-                // Find the start of the actual message content after "PRIVMSG"
                 var privMsgIndex = message.IndexOf("PRIVMSG");
                 if (privMsgIndex > -1)
                 {
@@ -289,11 +281,10 @@ namespace TwitchChatMod
                 return existingColor;
             }
 
-            // Generate a new random color
             var randomColor = new Color(Random.Next(256), Random.Next(256), Random.Next(256));
             assignedColors[username] = randomColor;
 
-            // Reset dictionary to avoid memory issues if it exceeds 100 entries
+
             if (assignedColors.Count > 100)
             {
                 assignedColors.Clear();
@@ -322,7 +313,7 @@ namespace TwitchChatMod
             {
                 Monitor.Log($"Error parsing color hex: {ex}", LogLevel.Warn);
             }
-            return Color.White; // Default to white for invalid colors
+            return Color.White; 
         }
 
         private void ReturnedToTitle(object sender, ReturnedToTitleEventArgs e)
