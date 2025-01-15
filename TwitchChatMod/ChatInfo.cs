@@ -5,8 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TwitchChatMod
-{
+
     public class ChatInfo
     {
         public string user { get; set; }
@@ -14,4 +13,4 @@ namespace TwitchChatMod
         public Color color { get; set; }
 
     }
-}
+

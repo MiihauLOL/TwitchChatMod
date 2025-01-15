@@ -253,7 +253,7 @@ namespace TwitchChatMod
                     var messageStart = message.IndexOf(" :", privMsgIndex);
                     if (messageStart > -1)
                     {
-                        return message.Substring(messageStart + 2).Trim();
+                        return message.Substring(messageStart + 2).Replace("󠀀","").Trim();
                     }
                 }
             }
