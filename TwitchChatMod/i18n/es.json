@@ -1,0 +1,15 @@
+{
+  //made with help from google-translate and reverso.net
+  "twitchchatmod.gen": "General",
+  "twitchchatmod.description": "Pasa el cursor sobre la variable para obtener una descripción",
+  "twitchchatmod.twitch_channel": "Canal de Twitch",
+  "twitchchatmod.twitch_channel_tooltip": "Introduce el nombre del canal de Twitch para mostrar los mensajes del chat.",
+  "twitchchatmod.ignored_usernames": "Usuarios Ignorados",
+  "twitchchatmod.ignored_usernames_tooltip": "Lista de nombres de usuario separados por comas que se deben ignorar.",
+  "twitchchatmod.chat_width_scale": "Escala de Ancho del Chat",
+  "twitchchatmod.chat_width_scale_tooltip": "Ajusta el ancho del chat en el juego. Se recomienda de '0.8' a '0.5', dependiendo de tu escala de interfaz preferida.",
+  "twitchchatmod.max_messages_displayed": "Máximo de Mensajes Mostrados",
+  "twitchchatmod.max_messages_displayed_tooltip": "Ajusta la altura máxima del chat en el juego. Recomiendo de 4 a 6, dependiendo de tu escala de interfaz preferida.",
+  "twitchchatmod.show_chat_ingame": "Mostrar Chat en el Juego",
+  "twitchchatmod.show_chat_ingame_tooltip": "¿Debería mostrarse el chat de Twitch en el juego?"
+}

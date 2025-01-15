@@ -1,9 +1,10 @@
 {
   "Name": "TwitchChatMod",
   "Author": "Miihau",
-  "Version": "1.0.0",
+  "Version": "1.0.1",
   "Description": "Adds Twitch Chat to the in game chat.",
   "UniqueID": "Miihau.TwitchChatMod",
   "EntryDll": "TwitchChatMod.dll",
-  "UpdateKeys": [ "Nexus:30798" ]
+  "UpdateKeys": [ "Nexus:30798" ],
+  "I18n":  true
 }

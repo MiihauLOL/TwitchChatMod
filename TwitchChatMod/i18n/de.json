@@ -1,0 +1,14 @@
+{
+  "twitchchatmod.gen": "Allgemein",
+  "twitchchatmod.description": "Halte den Mauszeiger über die Variable, um eine Beschreibung zu zeigen",
+  "twitchchatmod.twitch_channel": "Twitch-Kanal",
+  "twitchchatmod.twitch_channel_tooltip": "Trage hier den Namen des Twitch-Kanals ein, um Chatnachrichten anzuzeigen.",
+  "twitchchatmod.ignored_usernames": "Ignorierte Benutzernamen",
+  "twitchchatmod.ignored_usernames_tooltip": "Kommagetrennte Liste von Benutzernamen, die ignoriert werden sollen.",
+  "twitchchatmod.chat_width_scale": "Chat-Breiten-Skalierung",
+  "twitchchatmod.chat_width_scale_tooltip": "Passe die Breite des Ingame-Chats an. '0.8' bis '0.5' wird empfohlen, abhängig von der bevorzugten UI-Skalierung.",
+  "twitchchatmod.max_messages_displayed": "Maximal angezeigte Nachrichten",
+  "twitchchatmod.max_messages_displayed_tooltip": "Passe die maximale Höhe des Ingame-Chats an. Ich empfehle 4 bis 6, abhängig von der bevorzugten UI-Skalierung.",
+  "twitchchatmod.show_chat_ingame": "Chat im Spiel anzeigen",
+  "twitchchatmod.show_chat_ingame_tooltip": "Soll der Twitch-Chat im Spiel angezeigt werden."
+}

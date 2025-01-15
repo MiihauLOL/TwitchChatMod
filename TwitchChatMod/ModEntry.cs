@@ -51,52 +51,58 @@ namespace TwitchChatMod
             gmcmApi.Register(ModManifest, () => Config = new ModConfig(), () => Helper.WriteConfig(Config));
             gmcmApi.AddSectionTitle(
                 ModManifest,
-                text: () => "General"
-                );
+                text: () => Helper.Translation.Get("twitchchatmod.gen")
+                ); ;
             gmcmApi.AddParagraph(
                 ModManifest,
-                text: () => "Hover over the Variable to get a description");
+                text: () => Helper.Translation.Get("twitchchatmod.description"));
+
             gmcmApi.AddTextOption(
                 ModManifest,
-                name: () => "Twitch Channel",
-                tooltip: () => "Enter the Twitch channel name to display chat messages.",
+                name: () => Helper.Translation.Get("twitchchatmod.twitch_channel"),
+                tooltip: () => Helper.Translation.Get("twitchchatmod.twitch_channel_tooltip"),
                 getValue: () => Config.TwitchChannel,
                 setValue: value => Config.TwitchChannel = value
             );
+
             gmcmApi.AddTextOption(
                 ModManifest,
-                name: () => "Ignored Usernames",
-                tooltip: () => "Comma-separated list of usernames to ignore.",
+                name: () => Helper.Translation.Get("twitchchatmod.ignored_usernames"),
+                tooltip: () => Helper.Translation.Get("twitchchatmod.ignored_usernames_tooltip"),
                 getValue: () => string.Join(",", Config.IgnoredUsernames),
                 setValue: value => Config.IgnoredUsernames = new List<string>(value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             );
+
             gmcmApi.AddNumberOption(
                 ModManifest,
-                name: () => "Chat Width Scale",
-                tooltip: () => "Adjust the width of the in-game chat. '0.8' to '0.5' recommended, depending on your prefferd UI scale.",
+                name: () => Helper.Translation.Get("twitchchatmod.chat_width_scale"),
+                tooltip: () => Helper.Translation.Get("twitchchatmod.chat_width_scale_tooltip"),
                 getValue: () => Config.ChatWidthScale,
                 setValue: value => Config.ChatWidthScale = value,
                 min: 0.3f,
                 max: 1.0f,
                 interval: 0.05f
             );
+
             gmcmApi.AddNumberOption(
                 ModManifest,
-                name: () => "Max Messages Displayed",
-                tooltip: () => "Adjust the maximum height of the in-game chat. I recommend 4 to 6, depending on your prefferd UI scale.",
+                name: () => Helper.Translation.Get("twitchchatmod.max_messages_displayed"),
+                tooltip: () => Helper.Translation.Get("twitchchatmod.max_messages_displayed_tooltip"),
                 getValue: () => Config.MaxMessages,
                 setValue: value => Config.MaxMessages = value,
                 min: 1,
                 max: 10,
                 interval: 1
             );
+
             gmcmApi.AddBoolOption(
                 ModManifest,
-                name: () => "Show chat in game Enabled",
-                tooltip: () => "should Twitch chat be shown ingame.",
+                name: () => Helper.Translation.Get("twitchchatmod.show_chat_ingame"),
+                tooltip: () => Helper.Translation.Get("twitchchatmod.show_chat_ingame_tooltip"),
                 getValue: () => Config.ShowChatIngame,
                 setValue: value => Config.ShowChatIngame = value
-        );
+            );
+
         }
         private void OnRenderingHud(object sender, RenderingHudEventArgs e)
         {

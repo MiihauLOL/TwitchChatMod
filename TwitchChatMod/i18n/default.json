@@ -1,0 +1,14 @@
+{
+  "twitchchatmod.gen": "General",
+  "twitchchatmod.description": "Hover over the Variable to get a description",
+  "twitchchatmod.twitch_channel": "Twitch Channel",
+  "twitchchatmod.twitch_channel_tooltip": "Enter the Twitch channel name to display chat messages.",
+  "twitchchatmod.ignored_usernames": "Ignored Usernames",
+  "twitchchatmod.ignored_usernames_tooltip": "Comma-separated list of usernames to ignore.",
+  "twitchchatmod.chat_width_scale": "Chat Width Scale",
+  "twitchchatmod.chat_width_scale_tooltip": "Adjust the width of the in-game chat. '0.8' to '0.5' recommended, depending on your preferred UI scale.",
+  "twitchchatmod.max_messages_displayed": "Max Messages Displayed",
+  "twitchchatmod.max_messages_displayed_tooltip": "Adjust the maximum height of the in-game chat. I recommend 4 to 6, depending on your preferred UI scale.",
+  "twitchchatmod.show_chat_ingame": "Show Chat In-Game",
+  "twitchchatmod.show_chat_ingame_tooltip": "Should Twitch chat be shown in-game."
+}
