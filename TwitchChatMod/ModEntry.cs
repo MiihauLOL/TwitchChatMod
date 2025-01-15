@@ -10,6 +10,8 @@ using StardewValley;
 using GenericModConfigMenu;
 using System.Numerics;
 
+//I know my code is not the best but I try :3
+//I used a lot of try an error to get to the point the code is now :3
 namespace TwitchChatMod
 {
     public class ModEntry : Mod, IDisposable
@@ -93,6 +95,23 @@ namespace TwitchChatMod
                 interval: 0.05f
             );
 
+            gmcmApi.AddNumberOption(
+                ModManifest,
+                name: () => "Max Messages Displayed",
+                tooltip: () => "Adjust the maximum height of the in-game chat. I recommend 4 to 6, depending on your prefferd UI scale.",
+                getValue: () => Config.MaxMessages,
+                setValue: value => Config.MaxMessages = value,
+                min: 1,
+                max: 10,
+                interval: 1
+            );
+            gmcmApi.AddBoolOption(
+            ModManifest,
+            name: () => "Show chat in game Enabled",
+            tooltip: () => "should Twitch chat be shown ingame.",
+            getValue: () => Config.ShowChatIngame,
+            setValue: value => Config.ShowChatIngame = value
+        );
 
         }
         private void OnRenderingHud(object sender, RenderingHudEventArgs e)
@@ -106,7 +125,9 @@ namespace TwitchChatMod
             if (Game1.chatBox != null)
             {
                 Game1.chatBox.chatBox.Width = (int)(896 * Config.ChatWidthScale);
-
+                Game1.chatBox.emojiMenuIcon.bounds.X = (int)(896 * Config.ChatWidthScale);
+                Game1.chatBox.emojiMenu.xPositionOnScreen = Game1.chatBox.emojiMenuIcon.bounds.Center.X - 146;
+                Game1.chatBox.maxMessages = Config.MaxMessages;
             }
         }
 
@@ -155,17 +176,28 @@ namespace TwitchChatMod
                             if (message.Contains("PRIVMSG"))
                             {
                                 var user = ExtractDisplayName(message) ?? ExtractUsername(message);
-                                var chatMessage = ExtractChatMessage(message);
-                                var colorHex = ExtractTwitchColor(message);
-                                var color = string.IsNullOrEmpty(colorHex) ? GetOrAssignRandomColor(user) : ParseColor(colorHex);
-
                                 if (Config.IgnoredUsernames.Contains(user, StringComparer.OrdinalIgnoreCase))
                                 {
                                     //Monitor.Log($"Ignored message from user: {user}", LogLevel.Debug);
                                     continue;
                                 }
+                                
+                                var chatMessage = ExtractChatMessage(message);
+                                var colorHex = ExtractTwitchColor(message);
+                                var color = string.IsNullOrEmpty(colorHex) ? GetOrAssignRandomColor(user) : ParseColor(colorHex);
 
-                                Game1.chatBox?.addMessage($"{user}: {chatMessage}", color);
+                                ChatInfo chatInfo = new ChatInfo()
+                                {
+                                    message = chatMessage,
+                                    user = user,
+                                    color = color
+                                };
+                                this.Helper.Multiplayer.SendMessage(chatInfo, "ChatInfo", modIDs: new[] { "Miihau.CommandsForTwitchChatMod" });
+
+                                if (Config.ShowChatIngame)
+                                {
+                                    Game1.chatBox?.addMessage($"{user}: {chatMessage}", color);
+                                }
                             }
                         }
                         catch (IOException ex) when (token.IsCancellationRequested)

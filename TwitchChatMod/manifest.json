@@ -5,5 +5,5 @@
   "Description": "Adds Twitch Chat to the in game chat.",
   "UniqueID": "Miihau.TwitchChatMod",
   "EntryDll": "TwitchChatMod.dll",
-  "UpdateKeys": []
+  "UpdateKeys": [ "Nexus:30798" ]
 }

@@ -12,5 +12,7 @@ namespace TwitchChatMod
         public List<string> IgnoredUsernames { get; set; } = new List<string>();
         public float ChatWidthScale { get; set; } = 0.6f;
 
+        public int MaxMessages { get; set; } = 6;
+        public bool ShowChatIngame { get; set; } = true;
     }
 }
