@@ -9,7 +9,6 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using GenericModConfigMenu;
 using System.Numerics;
-
 //I know my code is not the best but I try :3
 //I used a lot of try an error to get to the point the code is now :3
 namespace TwitchChatMod
@@ -25,40 +24,31 @@ namespace TwitchChatMod
         private CancellationTokenSource cancellationTokenSource;
         private Dictionary<string, Color> assignedColors = new();
         private static readonly Random Random = new();
-
         private ModConfig Config;
 
         public override void Entry(IModHelper helper)
         {
-            // Load configuration
             Config = helper.ReadConfig<ModConfig>();
             channel = Config.TwitchChannel.ToLower();
-
-            // Hook game events
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.ReturnedToTitle += ReturnedToTitle;
             helper.Events.Display.RenderingHud += OnRenderingHud;
         }
-
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(channel))
             {
                 Monitor.Log("Twitch channel not set. Please configure the mod.", LogLevel.Warn);
             }
-
             RegisterGMCM();
         }
-
         private void RegisterGMCM()
         {
             var gmcmApi = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
             if (gmcmApi == null)
                 return;
-
             gmcmApi.Register(ModManifest, () => Config = new ModConfig(), () => Helper.WriteConfig(Config));
-
             gmcmApi.AddSectionTitle(
                 ModManifest,
                 text: () => "General"
@@ -66,16 +56,13 @@ namespace TwitchChatMod
             gmcmApi.AddParagraph(
                 ModManifest,
                 text: () => "Hover over the Variable to get a description");
-
-
             gmcmApi.AddTextOption(
-                        ModManifest,
-                        name: () => "Twitch Channel",
-                        tooltip: () => "Enter the Twitch channel name to display chat messages.",
-                        getValue: () => Config.TwitchChannel,
-                        setValue: value => Config.TwitchChannel = value
-                    );
-
+                ModManifest,
+                name: () => "Twitch Channel",
+                tooltip: () => "Enter the Twitch channel name to display chat messages.",
+                getValue: () => Config.TwitchChannel,
+                setValue: value => Config.TwitchChannel = value
+            );
             gmcmApi.AddTextOption(
                 ModManifest,
                 name: () => "Ignored Usernames",
@@ -83,7 +70,6 @@ namespace TwitchChatMod
                 getValue: () => string.Join(",", Config.IgnoredUsernames),
                 setValue: value => Config.IgnoredUsernames = new List<string>(value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             );
-
             gmcmApi.AddNumberOption(
                 ModManifest,
                 name: () => "Chat Width Scale",
@@ -94,7 +80,6 @@ namespace TwitchChatMod
                 max: 1.0f,
                 interval: 0.05f
             );
-
             gmcmApi.AddNumberOption(
                 ModManifest,
                 name: () => "Max Messages Displayed",
@@ -106,20 +91,17 @@ namespace TwitchChatMod
                 interval: 1
             );
             gmcmApi.AddBoolOption(
-            ModManifest,
-            name: () => "Show chat in game Enabled",
-            tooltip: () => "should Twitch chat be shown ingame.",
-            getValue: () => Config.ShowChatIngame,
-            setValue: value => Config.ShowChatIngame = value
+                ModManifest,
+                name: () => "Show chat in game Enabled",
+                tooltip: () => "should Twitch chat be shown ingame.",
+                getValue: () => Config.ShowChatIngame,
+                setValue: value => Config.ShowChatIngame = value
         );
-
         }
         private void OnRenderingHud(object sender, RenderingHudEventArgs e)
         {
-            
             AdjustChatBoxWidth();
         }
-
         private void AdjustChatBoxWidth()
         {
             if (Game1.chatBox != null)
@@ -130,7 +112,6 @@ namespace TwitchChatMod
                 Game1.chatBox.maxMessages = Config.MaxMessages;
             }
         }
-
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
             AdjustChatBoxWidth();
@@ -140,13 +121,11 @@ namespace TwitchChatMod
                 StartListeningToTwitchChat();
             }
         }
-
         private void StartListeningToTwitchChat()
         {
             listening = true;
             cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
-
             listeningTask = Task.Run(async () =>
             {
                 try
@@ -156,23 +135,18 @@ namespace TwitchChatMod
                     var stream = client.GetStream();
                     reader = new StreamReader(stream);
                     writer = new StreamWriter(stream) { AutoFlush = true };
-
                     await writer.WriteLineAsync("CAP REQ :twitch.tv/tags twitch.tv/commands");
                     await writer.WriteLineAsync($"NICK justinfan{new Random().Next(10000, 99999)}");
                     await writer.WriteLineAsync($"JOIN #{channel}");
                     Monitor.Log($"Joined channel: #{channel}", LogLevel.Info);
-
                     while (listening && !token.IsCancellationRequested && client.Connected)
                     {
                         try
                         {
                             var message = await reader.ReadLineAsync();
-
                             if (string.IsNullOrWhiteSpace(message) || token.IsCancellationRequested)
                                 continue;
-
                             //Monitor.Log($"Received message: {message}", LogLevel.Debug);
-
                             if (message.Contains("PRIVMSG"))
                             {
                                 var user = ExtractDisplayName(message) ?? ExtractUsername(message);
@@ -181,11 +155,9 @@ namespace TwitchChatMod
                                     //Monitor.Log($"Ignored message from user: {user}", LogLevel.Debug);
                                     continue;
                                 }
-                                
                                 var chatMessage = ExtractChatMessage(message);
                                 var colorHex = ExtractTwitchColor(message);
                                 var color = string.IsNullOrEmpty(colorHex) ? GetOrAssignRandomColor(user) : ParseColor(colorHex);
-
                                 ChatInfo chatInfo = new ChatInfo()
                                 {
                                     message = chatMessage,
@@ -211,7 +183,6 @@ namespace TwitchChatMod
                             break;
                         }
                     }
-
                 }
                 catch (OperationCanceledException)
                 {
@@ -227,7 +198,6 @@ namespace TwitchChatMod
                 }
             }, token);
         }
-
         private string ExtractDisplayName(string message)
         {
             try
@@ -250,7 +220,6 @@ namespace TwitchChatMod
             }
             return null;
         }
-
         private string ExtractUsername(string message)
         {
             try
@@ -268,7 +237,6 @@ namespace TwitchChatMod
             }
             return "Unknown";
         }
-
         private string ExtractChatMessage(string message)
         {
             try
@@ -289,7 +257,6 @@ namespace TwitchChatMod
             }
             return "[Message Parsing Error]";
         }
-
         private string ExtractTwitchColor(string message)
         {
             if (message.StartsWith("@"))
@@ -305,26 +272,20 @@ namespace TwitchChatMod
             }
             return null;
         }
-
         private Color GetOrAssignRandomColor(string username)
         {
             if (assignedColors.TryGetValue(username, out var existingColor))
             {
                 return existingColor;
             }
-
             var randomColor = new Color(Random.Next(256), Random.Next(256), Random.Next(256));
             assignedColors[username] = randomColor;
-
-
             if (assignedColors.Count > 100)
             {
                 assignedColors.Clear();
             }
-
             return randomColor;
         }
-
         private Color ParseColor(string hex)
         {
             try
@@ -347,15 +308,12 @@ namespace TwitchChatMod
             }
             return Color.White; 
         }
-
         private void ReturnedToTitle(object sender, ReturnedToTitleEventArgs e)
         {
             Monitor.Log("Closing connection to Twitch IRC...", LogLevel.Info);
             cancellationTokenSource?.Cancel();
             Dispose();
         }
-
-
         public void Dispose()
         {
             if (cancellationTokenSource != null)
@@ -364,18 +322,12 @@ namespace TwitchChatMod
                 cancellationTokenSource.Dispose();
                 cancellationTokenSource = null;
             }
-
             if (client != null)
             {
                 client.Close();
                 client = null;
             }
-
             listening = false;
         }
-
-
     }
-
-
 }
